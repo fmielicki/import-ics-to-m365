@@ -1,5 +1,13 @@
 # Importing ICS Files into Microsoft 365 Group Calendars
 
+## Original README below
+
+I forked this script from [sam-hey/import-ics-to-m365](https://github.com/sam-hey/import-ics-to-m365) because I need this for a personal project and perspectively a customer who wants to migrate from a local calendar solution to Exchange Online. Upon trying the script, I've found that multiple things were broken, namely auth/REST API Access which threw multiple 401 Unauthorized errors (because of broken 'code' handling), UTF-8 Character handling which broke Umlauts (ä, ö, ü, ß - yes we unironically use these in German[y]) and added support for Time Zone handling (it would shift my events by 2 hours).
+
+During testing, I also implemented a function that clears the whole calendar if there were previous failed imports (use the -with-PreClear script for that).
+
+----- OG README BELOW THIS LINE -----
+
 This project facilitates importing `.ics` calendar files into Microsoft 365 (M365) group calendars using PowerShell and the Microsoft Graph API. This approach addresses the challenge that direct copying of `.ics` files to M365 group calendars is not supported.
 
 
@@ -47,20 +55,12 @@ Before using the script, you must configure your Azure AD application and gather
 Before running the script, update the following variables:
 
 ```powershell
-#############
-# Variables #
-#############
-
-# Path to the ICS file
-$ics = "C:\temp\calendar\calendar.ics"
-
-# Graph API token credentials
-$TenantName = "<tenant>.onmicrosoft.com"
-$ClientId = "<your-client-id>"
-$ClientSecret = "<your-client-secret>"
-
-# Office 365 Group ID
-$GroupId = "<your-group-id>"
+$ics              = "C:\path\to\your\file.ics"
+$TenantId         = "<your-tenant.onmicrosoft.com or your-domain.xyz>"
+$ClientId         = "<your-client-id>"
+$GroupId          = "<your-group-id>"
+$RedirectUri      = "http://localhost"
+$CalendarTimeZone = "W. Europe Standard Time"
 ```
 
 
